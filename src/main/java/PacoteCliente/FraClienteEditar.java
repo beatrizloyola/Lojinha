@@ -4,6 +4,14 @@
  */
 package PacoteCliente;
 
+import PacoteClasses.Cliente;
+import PacoteClasses.InterOperacoesCliente;
+import PacoteClasses.OperacoesCliente;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author beatr
@@ -141,7 +149,31 @@ public class FraClienteEditar extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTelefoneActionPerformed
 
     private void btnConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmaActionPerformed
-        // TODO add your handling code here:
+
+        String nome, cpf, endereco, telefone = null;
+        
+        nome = txtNome.getText();
+        cpf = txtCpf.getText();
+        endereco = txtEndereco.getText();
+        telefone = txtTelefone.getText();
+        
+        if (nome.equals("") || cpf.equals("") || endereco.equals("") || telefone.equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Atenção!");
+            JOptionPane.showMessageDialog(rootPane, "Preencha todos os campos para poder continuar.");
+        } else {
+        
+        InterOperacoesCliente ioc = new OperacoesCliente();
+        Connection con = null;
+            try {
+                con = DriverManager.getConnection("jdbcmysql://localhost:3306/LojinhaDeEletronicos", "root", "root");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        Cliente c = new Cliente(nome, cpf, endereco, telefone);
+        ioc.alterarDadosCliente(con, c);
+        
+        }
     }//GEN-LAST:event_btnConfirmaActionPerformed
 
     /**
@@ -169,6 +201,12 @@ public class FraClienteEditar extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(FraClienteEditar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 

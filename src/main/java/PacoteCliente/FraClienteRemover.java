@@ -4,6 +4,12 @@
  */
 package PacoteCliente;
 
+import PacoteClasses.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author beatr
@@ -41,6 +47,11 @@ public class FraClienteRemover extends javax.swing.JFrame {
         jLabel3.setText("CPF do cliente:");
 
         btnConfirma.setText("Ok");
+        btnConfirma.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -78,6 +89,33 @@ public class FraClienteRemover extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmaActionPerformed
+        String cpf = txtCpf.getText();
+        while (cpf.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "O CPF não foi informado ainda");
+            cpf = JOptionPane.showInputDialog("Informe o CPF do cliente que você deseja remover do sistema");
+        }
+
+        InterOperacoesCliente iop = new OperacoesCliente();
+        Connection con = null;
+
+        try {
+            con = DriverManager.getConnection("jdbcmysql://localhost:3306/LojinhaDeEletronicos", "root", "root");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        Cliente c = iop.retornarUmCliente(con, cpf);
+        if(iop.verificarExistencia(con, cpf)){
+            JOptionPane.showMessageDialog(rootPane, "O cliente foi encontrado e vai ser removido");
+            iop.removerCliente(con, c);
+            JOptionPane.showMessageDialog(rootPane, "O cliente foi removido");
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "O cliente em questão não foi encontrado");
+            JOptionPane.showMessageDialog(rootPane, "Verifique se você informou o CPF corretamente");
+        }
+    }//GEN-LAST:event_btnConfirmaActionPerformed
 
     /**
      * @param args the command line arguments

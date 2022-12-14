@@ -91,4 +91,56 @@ public class OperacoesCliente implements InterOperacoesCliente {
         return clientes;
     }
 
+    @Override
+    public boolean verificarExistencia(Connection con, String cpfInformado) {
+    
+        String sql = "select cpf from produto where cpf = ?";
+
+        boolean retorno = false;
+        try {
+            PreparedStatement stm = con.prepareStatement(sql);
+            ResultSet rs = con.createStatement().executeQuery(sql);
+            stm.setString(1, cpfInformado);
+            stm.executeQuery();
+
+            while (rs.next()) {
+
+                String cpfDoBanco = rs.getString("cpf");
+                if (cpfDoBanco.equals(cpfInformado)) {
+                    retorno = true;
+                } else {
+
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return retorno;    }
+
+    @Override
+    public Cliente retornarUmCliente(Connection con, String cpfInformado) {
+        String sql = "select nome, cpf, endereco, telefone from cliente where cpf = ?";
+        Cliente c = null;
+        String nome = null, cpf = null, endereco = null, telefone = null;
+        try {
+            PreparedStatement stm = con.prepareStatement(sql);
+            ResultSet rs = con.createStatement().executeQuery(sql);
+            stm.setString(1, cpfInformado);
+            stm.executeUpdate();
+
+            while (rs.next()) {
+                nome = rs.getString("nome");
+                cpf = rs.getString("cpf");
+                endereco = rs.getString("endereco");
+                telefone = rs.getString("telefone");
+            }
+
+            c = new Cliente(nome, cpf, endereco, telefone);
+
+        } catch (Exception e) {
+        }
+        return c;
+    }
+
 }
