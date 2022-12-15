@@ -55,4 +55,29 @@ public class OperacoesVenda implements InterOperacoesVenda {
         }
 
     }
+
+    @Override
+    public Venda retornarUmaVenda(Connection con, int id) {
+    String sql = "select * from venda where id = ?";
+        Venda v = null;
+        String dataVenda = null, cliente = null;
+        int idVenda = 0;
+        try {
+            PreparedStatement stm = con.prepareStatement(sql);
+            ResultSet rs = con.createStatement().executeQuery(sql);
+            stm.setInt(1, id);
+            stm.executeUpdate();
+
+            while (rs.next()) {
+                idVenda = rs.getInt("id");
+                cliente = rs.getString("cliente");
+                dataVenda = rs.getString("dataVenda");
+            }
+
+            v = new Venda(cliente, id, dataVenda);
+
+        } catch (Exception e) {
+        }
+        return v;
+    }
 }

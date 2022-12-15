@@ -4,6 +4,12 @@
  */
 package PacoteCliente;
 
+import PacoteClasses.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.List;
+
 /**
  *
  * @author beatr
@@ -31,53 +37,104 @@ public class FraClientePesquisar extends javax.swing.JFrame {
         txtCpf = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         btnConfirma = new javax.swing.JButton();
+        jlNome = new javax.swing.JLabel();
+        jlEndereco = new javax.swing.JLabel();
+        jlTelefone = new javax.swing.JLabel();
 
         jLabel1.setText("jLabel1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel2.setText("Pesquisar - Cliente");
 
         jLabel3.setText("CPF do cliente:");
 
         btnConfirma.setText("Ok");
+        btnConfirma.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmaActionPerformed(evt);
+            }
+        });
+
+        jlNome.setText("Nome:");
+
+        jlEndereco.setText("Endereço:");
+
+        jlTelefone.setText("Telefone:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(148, 148, 148)
+                .addGap(143, 143, 143)
                 .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(97, Short.MAX_VALUE)
+                .addContainerGap(81, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addComponent(jlNome, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jlTelefone, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jlEndereco, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(btnConfirma)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
-                        .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(136, 136, 136))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnConfirma)
-                        .addGap(23, 23, 23))))
+                        .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(91, 91, 91))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addGap(39, 39, 39)
                 .addComponent(jLabel2)
-                .addGap(53, 53, 53)
+                .addGap(52, 52, 52)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                .addGap(3, 3, 3)
                 .addComponent(btnConfirma)
-                .addGap(47, 47, 47))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jlNome)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jlEndereco)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jlTelefone)
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        
+    }//GEN-LAST:event_formWindowOpened
+
+    private void btnConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmaActionPerformed
+        Connection con = null;
+        InterOperacoesCliente ioc = new OperacoesCliente();
+
+        try {
+            con = DriverManager.getConnection("jdbcmysql://localhost:3306/LojinhaDeEletronicos", "root", "root");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        Cliente c = ioc.retornarUmCliente(con, txtCpf.getText());
+        String nome = c.getNome();
+        String endereco = c.getEndereco();
+        String telefone = c.getTelefone();
+        
+        jlNome.setText("Nome: " + nome);
+        jlEndereco.setText("Endereço: " + endereco);
+        jlTelefone.setText("Telefone: "+ telefone);
+    }//GEN-LAST:event_btnConfirmaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -120,6 +177,9 @@ public class FraClientePesquisar extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jlEndereco;
+    private javax.swing.JLabel jlNome;
+    private javax.swing.JLabel jlTelefone;
     private javax.swing.JTextField txtCpf;
     // End of variables declaration//GEN-END:variables
 }
